@@ -1,28 +1,36 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import Navigation from './components/Navigation';
+import Dashboard from './components/Dashboard';
+import posed from 'react-pose';
+
+import { instanceOf } from 'prop-types';
+import { withCookies, Cookies } from 'react-cookie';
+import Cart from './components/Cart';
+
+
 
 class App extends Component {
+  static propTypes = {
+    cookies: instanceOf(Cookies).isRequired
+  };
+
+ 
+
   render() {
+    const { cookies } = this.props;
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
+      <BrowserRouter>
+        <div className="App">
+          <Navigation cookies={cookies} />
+          <Route exact path='/' render={() => <Dashboard cookies={cookies} />} />
+          <Route exact path='/cart' render={() => <Cart cookies={cookies} />} />
+          
+        </div>
+      </BrowserRouter>
     );
   }
 }
 
-export default App;
+export default withCookies(App);
